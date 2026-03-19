@@ -10,6 +10,9 @@
     <RootNamespace>HostedAgent</RootNamespace>
   </PropertyGroup>
   <ItemGroup>
+    <Content Include="local.settings.json" />
+  </ItemGroup>
+  <ItemGroup>
     <FrameworkReference Include="Microsoft.AspNetCore.App" />
   </ItemGroup>
   <!-- Azure Functions packages -->
@@ -21,11 +24,18 @@
     <PackageReference Include="Microsoft.Azure.Functions.Worker.Sdk" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Azure.AI.OpenAI" />
-    <PackageReference Include="Azure.Identity" />
+    <PackageReference Include="Microsoft.Extensions.AI.OpenAI" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\src\Microsoft.Agents.AI.Hosting.AzureFunctions\Microsoft.Agents.AI.Hosting.AzureFunctions.csproj" />
     <ProjectReference Include="..\..\..\src\Microsoft.Agents.AI.OpenAI\Microsoft.Agents.AI.OpenAI.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Update="host.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="appsettings.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 </Project>

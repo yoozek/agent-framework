@@ -8,23 +8,17 @@
 
 using System.Text;
 using System.Text.Json;
-using Azure.AI.OpenAI;
-using Azure.Identity;
 using Microsoft.Agents.AI;
 using Microsoft.Extensions.AI;
+using OpenAI;
 using OpenAI.Chat;
 using SampleApp;
 
-var endpoint = Environment.GetEnvironmentVariable("AZURE_OPENAI_ENDPOINT") ?? throw new InvalidOperationException("AZURE_OPENAI_ENDPOINT is not set.");
-var deploymentName = Environment.GetEnvironmentVariable("AZURE_OPENAI_DEPLOYMENT_NAME") ?? "gpt-4o-mini";
+var apiKey = Environment.GetEnvironmentVariable("OPENAI_API_KEY") ?? throw new InvalidOperationException("OPENAI_API_KEY is not set.");
+var model = Environment.GetEnvironmentVariable("OPENAI_MODEL") ?? "gpt-4o-mini";
 
-// WARNING: DefaultAzureCredential is convenient for development but requires careful consideration in production.
-// In production, consider using a specific credential (e.g., ManagedIdentityCredential) to avoid
-// latency issues, unintended credential probing, and potential security risks from fallback mechanisms.
-ChatClient chatClient = new AzureOpenAIClient(
-    new Uri(endpoint),
-    new DefaultAzureCredential())
-    .GetChatClient(deploymentName);
+ChatClient chatClient = new OpenAIClient(apiKey)
+    .GetChatClient(model);
 
 // Create the agent and provide a factory to add our custom memory component to
 // all sessions created by the agent. Here each new memory component will have its own
@@ -45,9 +39,9 @@ AgentSession session = await agent.CreateSessionAsync();
 Console.WriteLine(">> Use session with blank memory\n");
 
 // Invoke the agent and output the text result.
-Console.WriteLine(await agent.RunAsync("Hello, what is the square root of 9?", session));
-Console.WriteLine(await agent.RunAsync("My name is Ruaidhrí", session));
-Console.WriteLine(await agent.RunAsync("I am 20 years old", session));
+Console.WriteLine(await agent.RunAsync("What's my name and age?", session));
+Console.WriteLine(await agent.RunAsync("My name is Lukasz", session));
+Console.WriteLine(await agent.RunAsync("I am 67 years old", session));
 
 // We can serialize the session. The serialized state will include the state of the memory component.
 JsonElement sesionElement = await agent.SerializeSessionAsync(session);
